@@ -1,0 +1,187 @@
+/* ===== GLOBAL RESET ===== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background-color: #f4f6f8;
+  color: #333;
+}
+
+/* ===== CENTERED PAGE LAYOUT (LOGIN, REGISTER, HOME, ETC.) ===== */
+.page-center {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ===== COMMON CARD STYLE ===== */
+.card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== HEADINGS ===== */
+.card h1,
+.card h2,
+.card h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #1976d2;
+}
+
+/* ===== INPUTS ===== */
+.card input,
+.card textarea,
+.card select {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.card textarea {
+  min-height: 80px;
+  resize: none;
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+}
+
+.btn:hover {
+  background-color: #125aa0;
+}
+
+/* ===== TEXT LINKS ===== */
+.link {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  color: #1976d2;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+/* ========================================================= */
+/* ================= FULL SCREEN DASHBOARD ================= */
+/* ========================================================= */
+
+.dashboard-full {
+  min-height: 100vh;
+  background-color: #f4f6f8;
+  padding: 30px;
+}
+
+/* Dashboard header */
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.dashboard-header h2 {
+  font-size: 28px;
+  color: #1976d2;
+  margin-bottom: 5px;
+}
+
+.dashboard-header p {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Question cards */
+.dashboard-question {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 18px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-question h4 {
+  margin: 0 0 8px 0;
+  color: #333;
+}
+
+.dashboard-question p {
+  font-size: 14px;
+  color: #555;
+}
+
+/* Footer inside question card */
+.dashboard-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.dashboard-tag {
+  font-size: 12px;
+  color: #888;
+}
+
+/* View answer button */
+.dashboard-btn {
+  padding: 6px 14px;
+  background-color: #1976d2;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.dashboard-btn:hover {
+  background-color: #125aa0;
+}
+
+/* Ask new question button */
+.dashboard-ask {
+  margin-top: 25px;
+  display: inline-block;
+  padding: 10px 18px;
+  background-color: #1976d2;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.dashboard-ask:hover {
+  background-color: #125aa0;
+}
+
+/* ===== SMALL SCREEN RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .card {
+    margin: 10px;
+  }
+
+  .dashboard-full {
+    padding: 15px;
+  }
+}
