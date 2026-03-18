@@ -1,45 +1,37 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function AskQuestion() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
-  const navigate = useNavigate(); // ✅ added
+  const navigate = useNavigate();
 
   const handlePost = async () => {
-    if (!title || !description) {
+    if (!title.trim() || !description.trim()) {
       alert("Please fill all fields");
       return;
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/questions", {
+      const res = await fetch("http://localhost:5000/api/questions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          title,
-          description,
-        }),
+        body: JSON.stringify({ title, description }),
       });
 
-      const data = await response.json();
-      console.log(data);
+      const data = await res.json();
 
-      alert("Question posted successfully!");
-
-      // ✅ clear fields
-      setTitle("");
-      setDescription("");
-
-      // ✅ redirect to dashboard
-      navigate("/dashboard");
-
-    } catch (error) {
-      console.error(error);
-      alert("Error posting question");
+      if (res.ok) {
+        alert("Question posted!");
+        navigate("/dashboard");
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -58,15 +50,16 @@ function AskQuestion() {
           placeholder="Describe your question"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-        ></textarea>
+        />
 
         <button className="btn" onClick={handlePost}>
           Post Question
         </button>
 
-        <button className="link" onClick={() => navigate("/dashboard")}>
+        {/* ✅ FIXED HERE */}
+        <Link className="link" to="/dashboard">
           Back to Dashboard
-        </button>
+        </Link>
       </div>
     </div>
   );

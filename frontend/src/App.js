@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
-import AskQuestion from "./pages/AskQuestion";
-import ViewAnswers from "./pages/ViewAnswers";
-import UploadNotes from "./pages/UploadNotes"; // ✅ ADD THIS
-import "./App.css";
 
+import Home from "./components/Home";
+import Login from "./components/Login";
+import Register from "./components/Register";
+import Dashboard from "./components/Dashboard";
+import AskQuestion from "./components/AskQuestion";
+import ViewAnswers from "./components/ViewAnswers";
+import UploadNotes from "./components/UploadNotes";
+import "./App.css";
 function App() {
   return (
     <BrowserRouter>
@@ -18,7 +18,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/ask" element={<AskQuestion />} />
         <Route path="/answers/:id" element={<ViewAnswers />} />
-        <Route path="/upload" element={<UploadNotes />} /> {/* ✅ */}
+        <Route path="/upload" element={<UploadNotes />} />
       </Routes>
     </BrowserRouter>
   );
