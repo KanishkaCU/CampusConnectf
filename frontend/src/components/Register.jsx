@@ -18,24 +18,29 @@ function Register() {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/register", {
+      const res = await fetch("http://localhost:5000/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, password, role }),
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          role,
+        }),
       });
 
-      const data = await response.json();
+      const data = await res.json();
 
-      if (response.ok) {
-        alert("Registered successfully");
+      if (res.ok) {
+        
         navigate("/login");
       } else {
-        alert(data.message);
+        alert(data.message || "Registration failed");
       }
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       alert("Server error");
     }
   };
@@ -45,18 +50,23 @@ function Register() {
       <div className="card">
         <h2>Register</h2>
 
+        {/* Name */}
         <input
+          type="text"
           placeholder="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
 
+        {/* Email */}
         <input
+          type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
 
+        {/* Password */}
         <input
           type="password"
           placeholder="Password"
@@ -64,22 +74,25 @@ function Register() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
+        {/* Role */}
         <select
           value={role}
           onChange={(e) => setRole(e.target.value)}
         >
           <option value="">Select Role</option>
-          <option>Senior</option>
-          <option>Junior</option>
+          <option value="Senior">Senior</option>
+          <option value="Junior">Junior</option>
         </select>
 
+        {/* Button */}
         <button className="btn" onClick={handleRegister}>
           Register
         </button>
 
-        <Link className="link" to="/login">
-          Already registered? Login
-        </Link>
+        {/* Link */}
+        <p style={{ marginTop: "10px" }}>
+          <Link to="/login">Already registered? Login</Link>
+        </p>
       </div>
     </div>
   );

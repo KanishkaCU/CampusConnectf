@@ -4,12 +4,12 @@ import { useEffect } from "react";
 function Home() {
   const navigate = useNavigate();
 
-  // ✅ Check if user already logged in
+  // ✅ Redirect if already logged in
   useEffect(() => {
     const user = localStorage.getItem("user");
 
     if (user) {
-      navigate("/dashboard"); // redirect if logged in
+      navigate("/dashboard");
     }
   }, [navigate]);
 
@@ -22,13 +22,17 @@ function Home() {
           Senior–Junior Interaction Platform
         </p>
 
-        <Link className="btn" to="/login">
-          Login
-        </Link>
+        <div style={{ marginTop: "20px", textAlign: "center" }}>
+          <Link className="btn" to="/login">
+            Login
+          </Link>
 
-        <Link className="link" to="/register">
-          Register
-        </Link>
+          <br /><br />
+
+          <Link className="link" to="/register">
+            New user? Register
+          </Link>
+        </div>
       </div>
     </div>
   );
