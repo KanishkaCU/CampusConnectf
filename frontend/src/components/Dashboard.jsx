@@ -77,17 +77,7 @@ function Dashboard() {
             {/* TITLE ONLY */}
             <h3>{q.title}</h3>
 
-            {/* FILE */}
-            {q.file && (
-              <a
-                href={`http://localhost:5000/uploads/${q.file}`}
-                target="_blank"
-                rel="noreferrer"
-                className="file-link"
-              >
-                📎 View Attachment
-              </a>
-            )}
+
 
             {/* BOTTOM */}
             <div className="post-bottom">
