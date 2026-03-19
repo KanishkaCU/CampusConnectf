@@ -1,0 +1,181 @@
+Appium + Selenium Android Testing Assignment Guide
+
+Overview
+
+This assignment requires you to automate testing of the EriBank Android
+application using: - Appium - Selenium - Java - Android Emulator
+
+You will simulate user actions and verify the application state after
+each action.
+
+Total tests required: 27 First 2 tests are already provided. You must
+write the remaining 25 tests.
+
+------------------------------------------------------------------------
+
+Software Setup
+
+1. Download Test App
+
+Download: https://code.google.com/archive/p/eribank/downloads
+
+Place: Assign/app/EriBank.apk
+
+------------------------------------------------------------------------
+
+2. Install Node.js
+
+Download: https://nodejs.org/en/download/
+
+During installation enable: - npm package manager - Add to PATH
+
+------------------------------------------------------------------------
+
+3. Install Appium dependencies
+
+Open Command Prompt and run:
+
+npm install node npm install appium
+
+------------------------------------------------------------------------
+
+4. Install Android Studio
+
+Download: https://developer.android.com/studio
+
+Install: - Android SDK - Android Emulator - Platform Tools
+
+------------------------------------------------------------------------
+
+5. Install Appium Desktop
+
+Download from: http://appium.io/
+
+Install Appium for Windows.
+
+------------------------------------------------------------------------
+
+Configure Appium
+
+Open Appium Desktop → Edit Configurations
+
+Set:
+
+ANDROID_HOME Example: C:
+
+JAVA_HOME Example: C:Files
+
+------------------------------------------------------------------------
+
+Start Appium Server
+
+Click: Start Server
+
+Default port: 4723
+
+------------------------------------------------------------------------
+
+Create Android Emulator
+
+Open Android Studio → Configure → AVD Manager
+
+Create device: Pixel 4 XL
+
+Android Version: Lollipop (API 22)
+
+Start the emulator.
+
+------------------------------------------------------------------------
+
+Run the Project
+
+Run using:
+
+gradle run
+
+The EriBank app will launch automatically.
+
+------------------------------------------------------------------------
+
+Example Selenium Actions
+
+Enter Username
+
+driver.findElement(By.id(“usernameTextField”)).sendKeys(“company”);
+
+Enter Password
+
+driver.findElement(By.id(“passwordTextField”)).sendKeys(“company”);
+
+Click Login
+
+driver.findElement(By.id(“loginButton”)).click();
+
+Open Make Payment
+
+driver.findElement(By.id(“makePaymentButton”)).click();
+
+Enter Phone
+
+driver.findElement(By.id(“phoneTextField”)).sendKeys(“1234567890”);
+
+Enter Name
+
+driver.findElement(By.id(“nameTextField”)).sendKeys(“John”);
+
+Enter Amount
+
+driver.findElement(By.id(“amount”)).sendKeys(“100”);
+
+Select Country
+
+driver.findElement(By.id(“countryButton”)).click();
+driver.findElement(By.xpath(“//android.widget.TextView[@text='USA']”)).click();
+
+Send Payment
+
+driver.findElement(By.id(“sendPaymentButton”)).click();
+
+Confirm Payment
+
+driver.findElement(By.id(“yesButton”)).click();
+
+Logout
+
+driver.findElement(By.id(“logoutButton”)).click();
+
+------------------------------------------------------------------------
+
+Printing Test Results
+
+After each action call:
+
+printTest(testNumber);
+
+Example:
+
+Thread.sleep(2000); printTest(5);
+
+The results will be saved in:
+
+results/Output.txt
+
+------------------------------------------------------------------------
+
+Important Tip
+
+Always wait for the screen to load before printing:
+
+Thread.sleep(2000);
+
+This prevents incorrect UI state capture.
+
+------------------------------------------------------------------------
+
+Grading Criteria
+
+You will be graded based on:
+
+-   Correct application state after each test
+-   Correct UI elements printed
+-   All 27 tests executed successfully

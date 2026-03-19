@@ -1,120 +1,109 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import "./Dashboard.css";
+import { Link } from "react-router-dom";
+import Layout from "./Layout";
 
 function Dashboard() {
   const [questions, setQuestions] = useState([]);
-  const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const [filter, setFilter] = useState("recent");
+  const [category, setCategory] = useState("all");
 
+  // ✅ FETCH QUESTIONS
   useEffect(() => {
     fetch("http://localhost:5000/api/questions")
       .then((res) => res.json())
-      .then((data) => setQuestions(data));
+      .then((data) => setQuestions(data))
+      .catch((err) => console.log(err));
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    navigate("/login");
-  };
+  // ✅ FILTER + SORT
+  const filtered = questions
+    .filter((q) => {
+      if (category === "all") return true;
+      return q.category === category;
+    })
+    .sort((a, b) => {
+      if (filter === "recent") {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      }
+      if (filter === "popular") {
+        return (b.views || 0) - (a.views || 0);
+      }
+      return 0;
+    });
 
   return (
-    <div className="container">
+    <Layout
+      filter={filter}
+      setFilter={setFilter}
+      category={category}
+      setCategory={setCategory}
+    >
 
-      {/* NAVBAR */}
-      <div className="navbar">
-        <div className="left">
-          <div className="logo">C</div>
-          <div>
-            <h3>Campus Connect</h3>
-            <span>Student Learning Hub</span>
-          </div>
+      {/* HEADER */}
+      <div className="header">
+        <div>
+          <h2>All Posts</h2>
+          <p>{filtered.length} posts available</p>
         </div>
 
-        <div className="right">
-          <div className="profile">
-            <div className="avatar">{user?.name?.[0]}</div>
-            <div>
-              <p>{user?.name}</p>
-              <span>{user?.role}</span>
-            </div>
-          </div>
-
-          <button className="logout" onClick={handleLogout}>
-            Logout
-          </button>
-        </div>
+        {/* ✅ NEW POST BUTTON */}
+        <Link to="/ask" className="new-post">
+          + New Post
+        </Link>
       </div>
 
-      {/* BODY */}
-      <div className="content">
+      {/* POSTS */}
+      {filtered.length === 0 ? (
+        <p>No posts available</p>
+      ) : (
+        filtered.map((q) => (
+          <div key={q._id} className="post">
 
-        {/* SIDEBAR */}
-        <div className="sidebar">
-          <h4>Filters</h4>
-
-          <button className="active">Recent</button>
-          <button>Popular</button>
-
-          <h5>Category</h5>
-
-          <button className="active">All Posts</button>
-          <button>Study Notes</button>
-          <button>Projects</button>
-          <button>Guidance</button>
-          <button>Career</button>
-          <button>Skills</button>
-        </div>
-
-        {/* MAIN */}
-        <div className="main">
-
-          <div className="header">
-            <div>
-              <h2>All Posts</h2>
-              <p>{questions.length} posts available</p>
-            </div>
-
-            <Link to="/ask" className="new-post">
-              + New Post
-            </Link>
-          </div>
-
-          {questions.map((q) => (
-            <div key={q._id} className="post">
-
-              <div className="post-top">
-                <div className="user">
-                  <div className="avatar small">
-                    {user?.name?.[0]}
-                  </div>
-                  <div>
-                    <b>{user?.name}</b>
-                    <span>{user?.role}</span>
-                  </div>
+            {/* TOP */}
+            <div className="post-top">
+              <div className="user">
+                <div className="avatar small">
+                  {q.postedBy?.[0]?.toUpperCase() || "U"}
                 </div>
-
-                <span className="tag">notes</span>
+                <div>
+                  <b>{q.postedBy || "Unknown"}</b>
+                  <p style={{ margin: 0, fontSize: "12px" }}>{q.role}</p>
+                </div>
               </div>
 
-              <h3>{q.title}</h3>
-              <p>{q.description}</p>
-
-              <div className="post-bottom">
-                <span>❤️ 0</span>
-                <span>💬 {q.answer ? 1 : 0}</span>
-
-                <Link to={`/answers/${q._id}`} className="view-btn">
-                  View →
-                </Link>
-              </div>
-
+              <span className="tag">{q.category}</span>
             </div>
-          ))}
 
-        </div>
-      </div>
-    </div>
+            {/* TITLE ONLY */}
+            <h3>{q.title}</h3>
+
+            {/* FILE */}
+            {q.file && (
+              <a
+                href={`http://localhost:5000/uploads/${q.file}`}
+                target="_blank"
+                rel="noreferrer"
+                className="file-link"
+              >
+                📎 View Attachment
+              </a>
+            )}
+
+            {/* BOTTOM */}
+            <div className="post-bottom">
+              <span>👁 {q.views || 0}</span>
+              <span>❤️ {q.likes || 0}</span>
+
+              <Link to={`/answers/${q._id}`} className="view-btn">
+                View →
+              </Link>
+            </div>
+
+          </div>
+        ))
+      )}
+
+    </Layout>
   );
 }
 

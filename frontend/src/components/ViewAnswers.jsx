@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 function ViewAnswers() {
-  const { id } = useParams();
+  const { id } = useParams(); // ✅ get question id
   const navigate = useNavigate();
 
   const [question, setQuestion] = useState(null);
   const [answer, setAnswer] = useState("");
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user") || "null");
 
+  // ✅ fetch question
   useEffect(() => {
     fetch("http://localhost:5000/api/questions")
       .then((res) => res.json())
@@ -19,54 +20,76 @@ function ViewAnswers() {
       });
   }, [id]);
 
-  const handleAnswer = async () => {
-    if (!answer) return alert("Enter answer");
+  // ✅ submit answer
+  const handleSubmit = async () => {
+    if (!answer.trim()) {
+      alert("Enter answer");
+      return;
+    }
 
-    const res = await fetch(`http://localhost:5000/api/answer/${id}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        answer,
-        answeredBy: user.name,
-      }),
-    });
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/answer/${id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            answer,
+            answeredBy: user?.name,
+          }),
+        }
+      );
 
-    const data = await res.json();
-    setQuestion(data);
-    setAnswer("");
+      const data = await res.json();
+
+      if (res.ok) {
+        setQuestion(data); // update UI
+        setAnswer("");
+       
+      } else {
+        alert("Failed to submit");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Server error");
+    }
   };
 
   if (!question) return <p>Loading...</p>;
 
   return (
-    <div className="page-center">
-      <div className="card">
-        <h3>{question.title}</h3>
+    <div style={{ padding: "20px" }}>
+      <h2>{question.title}</h2>
+      <p>{question.description}</p>
 
-        <p><b>Question:</b> {question.description}</p>
-        <p><b>Answer:</b> {question.answer || "No answer yet"}</p>
+      <h3>Answer:</h3>
+      <p>{question.answer || "No answer yet"}</p>
 
-        {user?.role === "Senior" && (
-          <>
-            <textarea
-              placeholder="Write your answer..."
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-            />
+      {/* ✅ only senior can answer */}
+      {user?.role === "Senior" && (
+        <>
+          <textarea
+            placeholder="Write answer..."
+            value={answer}
+            onChange={(e) => setAnswer(e.target.value)}
+            style={{ width: "100%", height: "80px" }}
+          />
 
-            <button className="btn" onClick={handleAnswer}>
-              Submit Answer
-            </button>
-          </>
-        )}
+          <br /><br />
 
-        {/* ✅ FIXED HERE */}
-        <Link className="btn" to="/dashboard">
-          Back
-        </Link>
-      </div>
+          <button onClick={handleSubmit}>
+            Submit Answer
+          </button>
+        </>
+      )}
+
+      <br /><br />
+
+      <button onClick={() => navigate("/dashboard")}>
+        Back
+      </button>
     </div>
   );
 }

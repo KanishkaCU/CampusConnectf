@@ -1,0 +1,336 @@
+/* ===== THEME COLORS ===== */
+:root {
+  --primary: #4CAF6D;
+  --primary-dark: #3E8E5A;
+  --primary-light: #EAF6EE;
+  --bg: #F4F8F5;
+  --text-main: #2E3A32;
+  --text-light: #6B7C72;
+  --border: #E0E7E3;
+}
+
+/* ===== GLOBAL RESET ===== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+}
+
+/* ===== CENTER PAGE ===== */
+.page-center {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  overflow: visible; /* ✅ FIX DROPDOWN */
+}
+
+/* ===== CARD ===== */
+.card {
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+
+  overflow: visible; /* ✅ IMPORTANT */
+}
+
+/* ===== HEADINGS ===== */
+.card h1,
+.card h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--primary);
+}
+
+/* ===== INPUTS ===== */
+.card input,
+.card textarea,
+.card select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 14px;
+}
+
+/* TEXTAREA */
+.card textarea {
+  min-height: 80px;
+  resize: none;
+}
+
+/* ===== DROPDOWN FIX ===== */
+select {
+  background: white;
+  color: black;
+  position: relative;
+  z-index: 10;
+}
+
+select option {
+  background: white;
+  color: black;
+}
+
+/* ===== BUTTON ===== */
+.btn {
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: var(--primary);
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: var(--primary-dark);
+}
+
+/* ===== LINK ===== */
+.link {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+/* ===== FILE INPUT ===== */
+input[type="file"] {
+  margin-top: 10px;
+}
+
+/* ===== DASHBOARD COMMON ===== */
+.container {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+/* NAVBAR */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 30px;   /* 🔥 reduced height */
+  background: white;
+  border-bottom: 1px solid #e0e7e3;
+  align-items: center;
+}
+
+/* LEFT SIDE (LOGO + TEXT) */
+.left {
+  display: flex;
+  align-items: center;   /* ✅ vertical alignment */
+  gap: 12px;
+}
+
+/* TEXT BLOCK */
+.left div {
+  display: flex;
+  flex-direction: column; /* ✅ stack title + subtitle */
+  justify-content: center;
+}
+
+/* TITLE */
+.left h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+/* SUBTITLE */
+.left span {
+  font-size: 13px;
+  color: #6B7C72;
+}
+.logo {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, #4CAF6D, #6EDC95);
+  color: white;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.profile {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.profile p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.profile span {
+  font-size: 12px;
+  color: #6B7C72;
+}
+.avatar {
+  width: 40px;
+  height: 40px;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* CONTENT */
+.content {
+  display: flex;
+  padding: 30px;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 220px;
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+}
+
+.sidebar button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.sidebar button:hover {
+  background: var(--primary-light);
+}
+
+.sidebar .active {
+  background: var(--primary);
+  color: white;
+}
+
+/* MAIN */
+.main {
+  flex: 1;
+  margin-left: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; 
+}
+
+/* NEW POST BUTTON */
+.new-post {
+  display: inline-block;           
+  background: linear-gradient(135deg, #4CAF6D, #6EDC95);
+  color: white;
+
+  padding: 6px 12px;                
+  border-radius: 8px;
+
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+
+  height: auto;                     
+  line-height: normal;             
+}
+
+/* POST CARD */
+.post {
+  background: white;
+  padding: 18px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+  transition: 0.2s;
+}
+
+.post:hover {
+  transform: translateY(-3px);
+}
+
+/* POST TOP */
+.post-top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.user {
+  display: flex;
+  gap: 10px;
+}
+
+.avatar.small {
+  width: 30px;
+  height: 30px;
+}
+
+/* TAG */
+.tag {
+  background: var(--primary-light);
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+/* POST BOTTOM */
+.post-bottom {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.view-btn {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+/* FILE LINK */
+.file-link {
+  display: block;
+  margin-top: 10px;
+  color: var(--primary);
+}
+.logout {
+  padding: 6px 12px;
+  background: #f1f5f3;
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.logout:hover {
+  background: #ffffff;
+}
