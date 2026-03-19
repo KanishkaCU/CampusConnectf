@@ -2,46 +2,22 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 function Register() {
+  const [name,setName]=useState("");
+  const [email,setEmail]=useState("");
+  const [password,setPassword]=useState("");
+  const [role,setRole]=useState("");
+
   const navigate = useNavigate();
 
-  // ✅ State
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
-
-  // ✅ Handle Register
   const handleRegister = async () => {
-    if (!name || !email || !password || !role) {
-      alert("Please fill all fields");
-      return;
-    }
+    const res = await fetch("http://localhost:5000/api/register",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({name,email,password,role})
+    });
 
-    try {
-      const res = await fetch("http://localhost:5000/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-          role,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        
-        navigate("/login");
-      } else {
-        alert(data.message || "Registration failed");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Server error");
+    if(res.ok){
+      navigate("/login");
     }
   };
 
@@ -50,49 +26,19 @@ function Register() {
       <div className="card">
         <h2>Register</h2>
 
-        {/* Name */}
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <input placeholder="Name" onChange={(e)=>setName(e.target.value)} />
+        <input placeholder="Email" onChange={(e)=>setEmail(e.target.value)} />
+        <input type="password" placeholder="Password" onChange={(e)=>setPassword(e.target.value)} />
 
-        {/* Email */}
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        {/* Password */}
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        {/* Role */}
-        <select
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-        >
-          <option value="">Select Role</option>
-          <option value="Senior">Senior</option>
-          <option value="Junior">Junior</option>
+        <select onChange={(e)=>setRole(e.target.value)}>
+          <option>Select Role</option>
+          <option>Senior</option>
+          <option>Junior</option>
         </select>
 
-        {/* Button */}
-        <button className="btn" onClick={handleRegister}>
-          Register
-        </button>
+        <button className="btn" onClick={handleRegister}>Register</button>
 
-        {/* Link */}
-        <p style={{ marginTop: "10px" }}>
-          <Link to="/login">Already registered? Login</Link>
-        </p>
+        <Link to="/login" className="link">Already have account?</Link>
       </div>
     </div>
   );
