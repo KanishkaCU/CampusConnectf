@@ -1,6 +1,7 @@
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
-function Layout({ children, filter, setFilter, category, setCategory }) {
+function Layout({ children, filter, setFilter, category, setCategory, search, setSearch }) {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user") || "null");
 
@@ -22,6 +23,22 @@ function Layout({ children, filter, setFilter, category, setCategory }) {
           </div>
         </div>
 
+        {/* 🔍 SEARCH */}
+
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Search posts & notes..."
+            className="search"
+            value={search || ""}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <button className="search-btn" onClick={() => { }}>
+            🔍 Search
+          </button>
+        </div>
+
+        {/* RIGHT - Profile & Logout */}
         <div className="right">
           <div className="profile">
             <div className="avatar">{user?.name?.[0]}</div>
@@ -30,47 +47,25 @@ function Layout({ children, filter, setFilter, category, setCategory }) {
               <span>{user?.role}</span>
             </div>
           </div>
-
-          <button className="logout" onClick={handleLogout}>
-            Logout
-          </button>
+          <button className="logout" onClick={handleLogout}>Logout</button>
         </div>
-      </div>
+
+      </div> {/* ✅ closes navbar */}
 
       {/* BODY */}
       <div className="content">
 
         {/* SIDEBAR */}
         <div className="sidebar">
-          <h4>Filters</h4>
-
-          <button
-            className={filter === "recent" ? "active" : ""}
-            onClick={() => setFilter("recent")}
-          >
-            Recent
-          </button>
-
-          <button
-            className={filter === "popular" ? "active" : ""}
-            onClick={() => setFilter("popular")}
-          >
-            Popular
-          </button>
-
-          <h5>Category</h5>
-
-          {["all", "notes", "projects", "guidance", "career", "skills"].map(
-            (cat) => (
-              <button
-                key={cat}
-                className={category === cat ? "active" : ""}
-                onClick={() => setCategory(cat)}
-              >
-                {cat === "all" ? "All Posts" : cat}
-              </button>
-            )
-          )}
+          <div>
+            <h4>Menu</h4>
+            <button onClick={() => navigate("/dashboard")}>🏠 Dashboard</button>
+            <button onClick={() => navigate("/profile")}>👤 Profile</button>
+            <button onClick={() => navigate("/notes")}>📄 My Notes</button>
+          </div>
+          <div>
+            <button onClick={handleLogout}>🚪 Logout</button>
+          </div>
         </div>
 
         {/* MAIN CONTENT */}
@@ -78,8 +73,9 @@ function Layout({ children, filter, setFilter, category, setCategory }) {
           {children}
         </div>
 
-      </div>
-    </div>
+      </div> {/* ✅ closes content */}
+
+    </div> // ✅ closes layout
   );
 }
 

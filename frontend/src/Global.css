@@ -334,3 +334,68 @@ input[type="file"] {
 .logout:hover {
   background: #ffffff;
 }
+/* SIDEBAR FIX */
+.sidebar {
+  width: 220px;
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* 🔥 THIS PUSHES LOGOUT DOWN */
+  height: calc(100vh - 80px); /* adjust based on navbar height */
+}
+.search-btn {
+  padding: 8px 16px;
+  background-color: #4CAF6D;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.search-btn:hover {
+  background-color: #4CAF6D;
+}
+
+/* 🔍 SEARCH CONTAINER */
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1.5px solid #d1d5db;
+  background: white;
+}
+
+/* 🔍 SEARCH INPUT */
+.search {
+  padding: 10px 16px;
+  font-size: 14px;
+  border: none;
+  outline: none;
+  width: 280px;
+  background: white;
+  color: #111;
+}
+
+/* 🔍 SEARCH BUTTON */
+.search-btn {
+  padding: 10px 20px;
+  background-color: #4CAF6D;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.search-btn:hover {
+  background-color:#4CAF6D;
+}
