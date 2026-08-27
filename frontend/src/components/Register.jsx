@@ -9,17 +9,35 @@ function Register() {
 
   const navigate = useNavigate();
 
-  const handleRegister = async () => {
-    const res = await fetch("http://localhost:5000/api/register",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({name,email,password,role})
+const handleRegister = async () => {
+  try {
+    const res = await fetch("http://localhost:5000/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        role
+      })
     });
 
-    if(res.ok){
+    const data = await res.json();
+
+    console.log("Backend response:", data);
+
+    if (res.ok) {
       navigate("/login");
+    } else {
+      alert(data.message || "Registration failed");
     }
-  };
+  } catch (error) {
+    console.error("Register error:", error);
+    alert("Cannot connect to backend");
+  }
+};
 
   return (
     <div className="page-center">

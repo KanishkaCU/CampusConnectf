@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
-
+import "./App.css";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -10,7 +10,7 @@ import ViewAnswers from "./components/ViewAnswers";
 import Profile from "./components/Profile";
 import MyNotes from "./components/MyNotes";
 import UploadNotes from "./components/UploadNotes";
-
+import NoteDetails from "./components/NoteDetails";
 function App() {
   const [search, setSearch] = useState("");
 
@@ -26,6 +26,15 @@ function App() {
         <Route path="/profile" element={<Profile search={search} setSearch={setSearch} />} />
         <Route path="/notes" element={<MyNotes search={search} setSearch={setSearch} />} />
         <Route path="/upload" element={<UploadNotes search={search} setSearch={setSearch} />} />
+        <Route
+  path="/notes/:id"
+  element={
+    <NoteDetails
+      search={search}
+      setSearch={setSearch}
+    />
+  }
+/>
       </Routes>
     </BrowserRouter>
   );

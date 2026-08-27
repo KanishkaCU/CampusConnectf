@@ -1,9 +1,13 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
-function Layout({ children, filter, setFilter, category, setCategory, search, setSearch }) {
+function Layout({ children, search, setSearch }) {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const location = useLocation();
+
+  const user = JSON.parse(
+    localStorage.getItem("user") || "null"
+  );
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -13,69 +17,192 @@ function Layout({ children, filter, setFilter, category, setCategory, search, se
   return (
     <div className="layout">
 
-      {/* NAVBAR */}
-      <div className="navbar">
-        <div className="left">
-          <div className="logo">C</div>
+      {/* ================= NAVBAR ================= */}
+
+      <header className="navbar">
+
+        <div
+          className="brand"
+          onClick={() => navigate("/dashboard")}
+          style={{ cursor: "pointer" }}
+        >
+
+          <div className="logo">
+            C
+          </div>
+
           <div>
             <h3>Campus Connect</h3>
             <span>Student Learning Hub</span>
           </div>
+
         </div>
 
-        {/* 🔍 SEARCH */}
+
+        {/* SEARCH */}
 
         <div className="search-container">
+
+          <span className="search-icon">
+            🔍
+          </span>
+
           <input
             type="text"
-            placeholder="Search posts & notes..."
-            className="search"
+            placeholder="Search notes..."
             value={search || ""}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) =>
+              setSearch(e.target.value)
+            }
           />
-          <button className="search-btn" onClick={() => { }}>
-            🔍 Search
+
+        </div>
+
+
+        {/* USER */}
+
+        <div className="navbar-user">
+
+          <div className="avatar">
+            {user?.name?.[0]?.toUpperCase() || "U"}
+          </div>
+
+          <div className="navbar-user-info">
+
+            <strong>
+              {user?.name || "User"}
+            </strong>
+
+            <span>
+              {user?.role || "Student"}
+            </span>
+
+          </div>
+
+          <button
+            className="logout-icon"
+            onClick={handleLogout}
+            title="Logout"
+          >
+            ↪
           </button>
+
         </div>
 
-        {/* RIGHT - Profile & Logout */}
-        <div className="right">
-          <div className="profile">
-            <div className="avatar">{user?.name?.[0]}</div>
-            <div>
-              <p>{user?.name}</p>
-              <span>{user?.role}</span>
-            </div>
+      </header>
+
+
+      {/* ================= BODY ================= */}
+
+      <div className="app-body">
+
+
+        {/* ================= SIDEBAR ================= */}
+
+        <aside className="filter-sidebar">
+
+          <div className="filter-card">
+
+            <h3>
+              📚 Campus Connect
+            </h3>
+
+            <p
+              style={{
+                color: "#7b877f",
+                fontSize: "13px",
+                lineHeight: "1.5",
+              }}
+            >
+              Share notes, learn together
+              and help each other.
+            </p>
+
+
+            {/* POST NOTE */}
+
+            <button
+              className="sidebar-post-btn"
+              onClick={() => navigate("/upload")}
+            >
+              + Post Note
+            </button>
+
           </div>
-          <button className="logout" onClick={handleLogout}>Logout</button>
-        </div>
 
-      </div> {/* ✅ closes navbar */}
 
-      {/* BODY */}
-      <div className="content">
+          {/* NAVIGATION */}
 
-        {/* SIDEBAR */}
-        <div className="sidebar">
-          <div>
-            <h4>Menu</h4>
-            <button onClick={() => navigate("/dashboard")}>🏠 Dashboard</button>
-            <button onClick={() => navigate("/profile")}>👤 Profile</button>
-            <button onClick={() => navigate("/notes")}>📄 My Notes</button>
+          <div className="sidebar-navigation">
+
+            <button
+              onClick={() =>
+                navigate("/dashboard")
+              }
+              className={
+                location.pathname === "/dashboard"
+                  ? "active"
+                  : ""
+              }
+            >
+              🏠 Notes Feed
+            </button>
+
+
+            <button
+              onClick={() =>
+                navigate("/notes")
+              }
+              className={
+                location.pathname === "/notes"
+                  ? "active"
+                  : ""
+              }
+            >
+              📚 My Notes
+            </button>
+
+
+            <button
+              onClick={() =>
+                navigate("/profile")
+              }
+              className={
+                location.pathname === "/profile"
+                  ? "active"
+                  : ""
+              }
+            >
+              👤 Profile
+            </button>
+
           </div>
-          <div>
-            <button onClick={handleLogout}>🚪 Logout</button>
-          </div>
-        </div>
 
-        {/* MAIN CONTENT */}
-        <div className="main">
+
+          {/* LOGOUT */}
+
+          <div className="sidebar-bottom">
+
+            <button
+              onClick={handleLogout}
+            >
+              🚪 Logout
+            </button>
+
+          </div>
+
+        </aside>
+
+
+        {/* ================= MAIN ================= */}
+
+        <main className="main-content">
           {children}
-        </div>
+        </main>
 
-      </div> {/* ✅ closes content */}
+      </div>
 
-    </div> // ✅ closes layout
+    </div>
   );
 }
 

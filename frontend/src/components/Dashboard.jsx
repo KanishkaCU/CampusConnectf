@@ -1,102 +1,341 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Layout from "./Layout";
 
-function Dashboard({ search, setSearch }) {  // ✅ accept setSearch
-  const [questions, setQuestions] = useState([]);
-  const [filter, setFilter] = useState("recent");
-  const [category, setCategory] = useState("all");
+function Dashboard({ search, setSearch }) {
+  const [notes, setNotes] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // ✅ FETCH QUESTIONS
+  const navigate = useNavigate();
+
+  const user = JSON.parse(
+    localStorage.getItem("user") || "null"
+  );
+
+  // =====================================
+  // LOAD NOTES
+  // =====================================
+
+  const loadNotes = async () => {
+    try {
+      const res = await fetch(
+        "http://localhost:5000/api/notes"
+      );
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setNotes(data);
+      } else {
+        console.log(data);
+      }
+
+    } catch (error) {
+      console.error("Notes error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetch("http://localhost:5000/api/questions")
-      .then((res) => res.json())
-      .then((data) => setQuestions(data))
-      .catch((err) => console.log(err));
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    loadNotes();
   }, []);
 
-  // ✅ FILTER + SEARCH + SORT
-const filtered = questions
-  .filter((q) => {
-    const searchText = search?.toLowerCase() || "";
 
-    const matchesSearch =
-      q.title?.toLowerCase().includes(searchText) ||
-      q.description?.toLowerCase().includes(searchText) ||
-      q.category?.toLowerCase().includes(searchText);
+  // =====================================
+  // LIKE NOTE
+  // =====================================
 
-    const matchesCategory =
-      category === "all" ? true : q.category === category;
+  const handleLike = async (noteId) => {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/notes/${noteId}/like`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: user.name,
+          }),
+        }
+      );
 
-    return matchesSearch && matchesCategory;
-  })
-  .sort((a, b) => {
-    if (filter === "recent") {
-      return new Date(b.createdAt) - new Date(a.createdAt);
+      const updatedNote = await res.json();
+
+      if (res.ok) {
+        setNotes((prev) =>
+          prev.map((note) =>
+            note._id === updatedNote._id
+              ? updatedNote
+              : note
+          )
+        );
+      }
+
+    } catch (error) {
+      console.error(error);
     }
-    if (filter === "popular") {
-      return (b.views || 0) - (a.views || 0);
-    }
-    return 0;
+  };
+
+
+  // =====================================
+  // SEARCH
+  // =====================================
+
+  const filteredNotes = notes.filter((note) => {
+    const text = search?.toLowerCase() || "";
+
+    return (
+      note.title?.toLowerCase().includes(text) ||
+      note.topic?.toLowerCase().includes(text) ||
+      note.uploadedBy?.toLowerCase().includes(text)
+    );
   });
 
-   return (
+
+  return (
     <Layout
-      filter={filter}
-      setFilter={setFilter}
-      category={category}
-      setCategory={setCategory}
       search={search}
-      setSearch={setSearch}  // ✅ pass the real setSearch
+      setSearch={setSearch}
     >
-      {/* HEADER */}
-      <div className="header">
-        <div>
-          <h2>All Posts</h2>
-          <p>{filtered.length} posts available</p>
+
+      <div className="notes-feed">
+
+        {/* ================= HEADER ================= */}
+
+        <div className="feed-header">
+
+          <div>
+            <h2>📚 Notes Feed</h2>
+
+            <p>
+              Learn and share with your campus
+              community.
+            </p>
+          </div>
+
+          <button
+            className="new-post"
+            onClick={() => navigate("/upload")}
+          >
+            + Post Note
+          </button>
+
         </div>
-        <Link to="/ask" className="new-post">+ New Post</Link>
-      </div>
 
-      {/* POSTS */}
-      {filtered.length === 0 ? (
-        <p>No posts available</p>
-      ) : (
-        filtered.map((q) => (
-          <div key={q._id} className="post">
 
-            {/* TOP */}
-            <div className="post-top">
-              <div className="user">
-                <div className="avatar small">
-                  {q.postedBy?.[0]?.toUpperCase() || "U"}
-                </div>
-                <div>
-                  <b>{q.postedBy}</b> {/* ✅ removed "Unknown" */}
-                  <p style={{ margin: 0, fontSize: "12px" }}>
-                    {q.role}
-                  </p>
-                </div>
+        {/* ================= LOADING ================= */}
+
+        {loading && (
+          <div className="card">
+            <p>Loading notes...</p>
+          </div>
+        )}
+
+
+        {/* ================= EMPTY ================= */}
+
+        {!loading &&
+          filteredNotes.length === 0 && (
+
+            <div
+              className="card"
+              style={{
+                textAlign: "center",
+                padding: "50px",
+              }}
+            >
+
+              <div
+                style={{
+                  fontSize: "50px",
+                }}
+              >
+                📚
               </div>
 
-              <span className="tag">{q.category}</span>
+              <h3>
+                No notes yet
+              </h3>
+
+              <p
+                style={{
+                  color: "#888",
+                }}
+              >
+                Be the first person to share
+                study notes!
+              </p>
+
+              <button
+                className="btn"
+                onClick={() =>
+                  navigate("/upload")
+                }
+              >
+                + Post Note
+              </button>
+
             </div>
+          )}
 
-            {/* TITLE */}
-            <h3>{q.title}</h3>
 
-            {/* BOTTOM */}
-            <div className="post-bottom">
-              <span>❤️ {q.likes?.length || 0}</span>
+        {/* ================= NOTE POSTS ================= */}
 
-              <Link to={`/answers/${q._id}`} className="view-btn">
-                View →
-              </Link>
-            </div>
+        {!loading &&
+          filteredNotes.map((note) => {
 
-          </div>
-        ))
-      )}
+            const liked =
+              note.likes?.includes(user?.name);
+
+            return (
+
+              <div
+                className="note-feed-card"
+                key={note._id}
+              >
+
+                {/* USER */}
+
+                <div className="note-post-user">
+
+                  <div className="avatar">
+                    {note.uploadedBy
+                      ?.charAt(0)
+                      .toUpperCase() || "U"}
+                  </div>
+
+                  <div>
+
+                    <strong>
+                      {note.uploadedBy}
+                    </strong>
+
+                    <span>
+                      {note.uploadedByRole ||
+                        "Student"}
+                    </span>
+
+                  </div>
+
+                </div>
+
+
+                {/* NOTE */}
+
+                <div className="note-post-content">
+
+                  <div className="note-topic">
+                    {note.topic}
+                  </div>
+
+                  <h3>
+                    📄 {note.title}
+                  </h3>
+
+                  <p>
+                    Study material shared
+                    with Campus Connect.
+                  </p>
+
+                </div>
+
+
+                {/* FILE */}
+
+                <div className="note-file-preview">
+
+                  <div>
+
+                    <span className="file-icon">
+                      📄
+                    </span>
+
+                    <div>
+
+                      <strong>
+                        Study Material
+                      </strong>
+
+                      <small>
+                        {note.file}
+                      </small>
+
+                    </div>
+
+                  </div>
+
+                  <a
+                    href={`http://localhost:5000/uploads/${note.file}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="download-note-link"
+                  >
+                    Open
+                  </a>
+
+                </div>
+
+
+                {/* ACTIONS */}
+
+                <div className="note-actions">
+
+                  <button
+                    className={
+                      liked
+                        ? "liked-btn"
+                        : "like-btn"
+                    }
+                    onClick={() =>
+                      handleLike(note._id)
+                    }
+                  >
+                    {liked ? "❤️" : "🤍"}
+
+                    {" "}
+
+                    {note.likes?.length || 0}
+                  </button>
+
+
+                  <button
+                    className="comment-btn"
+                    onClick={() =>
+                      navigate(
+                        `/notes/${note._id}`
+                      )
+                    }
+                  >
+                    💬 Comments
+                  </button>
+
+
+                  <button
+                    className="view-note-feed-btn"
+                    onClick={() =>
+                      navigate(
+                        `/notes/${note._id}`
+                      )
+                    }
+                  >
+                    View Note →
+                  </button>
+
+                </div>
+
+              </div>
+            );
+          })}
+
+      </div>
+
     </Layout>
   );
 }

@@ -9,84 +9,254 @@ function AskQuestion({ search, setSearch }) {
   const [file, setFile] = useState(null);
 
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user") || "null");
+
+  const user = JSON.parse(
+    localStorage.getItem("user") || "null"
+  );
 
   const handlePost = async () => {
-    if (!title || !description || !category) {
-      alert("Fill all fields");
+    if (!title.trim() || !description.trim() || !category) {
+      alert("Please fill all required fields");
       return;
     }
 
     const formData = new FormData();
+
     formData.append("title", title);
     formData.append("description", description);
     formData.append("category", category);
-    formData.append("postedBy", user?.name);
-    formData.append("role", user?.role);
+    formData.append("postedBy", user?.name || "");
+    formData.append("role", user?.role || "");
 
     if (file) {
       formData.append("file", file);
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/questions", {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(
+        "http://localhost:5000/api/questions",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await res.json();
 
       if (res.ok) {
-        alert("Question posted successfully!");
+        alert("Post created successfully! 🎉");
+
+        setTitle("");
+        setDescription("");
+        setCategory("");
+        setFile(null);
+
         navigate("/dashboard");
       } else {
-        alert("Failed to post");
+        alert(data.message || "Failed to create post");
       }
+
     } catch (err) {
       console.error(err);
-      alert("Server error");
+      alert("Unable to connect to server");
     }
   };
 
   return (
-    <Layout search={search} setSearch={setSearch}>
-      <div className="page-center">
-        <div className="card">
-          <h2>Ask Question</h2>
+    <Layout
+      search={search}
+      setSearch={setSearch}
+    >
+
+      <div className="create-post-page">
+
+        {/* HEADER */}
+
+        <div className="create-post-header">
+
+          <div>
+            <h2>Create a Post</h2>
+
+            <p>
+              Ask a question, share your knowledge,
+              or start a discussion with your campus.
+            </p>
+          </div>
+
+          <button
+            className="back-btn"
+            onClick={() => navigate("/dashboard")}
+          >
+            ← Back
+          </button>
+
+        </div>
+
+
+        {/* FORM */}
+
+        <div className="create-post-card">
 
           {/* CATEGORY */}
-          <select onChange={(e) => setCategory(e.target.value)}>
-            <option value="">Select Category</option>
-            <option value="notes">Notes</option>
-            <option value="projects">Projects</option>
-            <option value="guidance">Guidance</option>
-            <option value="career">Career</option>
-            <option value="skills">Skills</option>
-          </select>
+
+          <div className="form-group">
+
+            <label>
+              Category <span>*</span>
+            </label>
+
+            <select
+              value={category}
+              onChange={(e) =>
+                setCategory(e.target.value)
+              }
+            >
+              <option value="">
+                Select a category
+              </option>
+
+              <option value="notes">
+                📚 Study Notes
+              </option>
+
+              <option value="projects">
+                💻 Projects
+              </option>
+
+              <option value="guidance">
+                🎓 Guidance
+              </option>
+
+              <option value="career">
+                💼 Career
+              </option>
+
+              <option value="skills">
+                🛠 Skills
+              </option>
+            </select>
+
+          </div>
+
 
           {/* TITLE */}
-          <input
-            placeholder="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+
+          <div className="form-group">
+
+            <label>
+              Title <span>*</span>
+            </label>
+
+            <input
+              type="text"
+              placeholder="What would you like to ask?"
+              value={title}
+              onChange={(e) =>
+                setTitle(e.target.value)
+              }
+            />
+
+          </div>
+
 
           {/* DESCRIPTION */}
-          <textarea
-            placeholder="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
+
+          <div className="form-group">
+
+            <label>
+              Description <span>*</span>
+            </label>
+
+            <textarea
+              placeholder="Explain your question or discussion..."
+              value={description}
+              onChange={(e) =>
+                setDescription(e.target.value)
+              }
+            />
+
+          </div>
+
 
           {/* FILE */}
-          <input
-            type="file"
-            onChange={(e) => setFile(e.target.files[0])}
-          />
 
-          <button className="btn" onClick={handlePost}>
-            Post Question
-          </button>
+          <div className="form-group">
+
+            <label>
+              Attachment
+              <small> Optional</small>
+            </label>
+
+            <div className="file-upload">
+
+              <input
+                type="file"
+                id="post-file"
+                onChange={(e) =>
+                  setFile(e.target.files[0])
+                }
+              />
+
+              <label htmlFor="post-file">
+                📎 Choose a file
+              </label>
+
+              <span>
+                {file
+                  ? file.name
+                  : "No file selected"}
+              </span>
+
+            </div>
+
+          </div>
+
+
+          {/* USER INFO */}
+
+          <div className="post-author">
+
+            <div className="avatar">
+              {user?.name?.[0]?.toUpperCase() || "U"}
+            </div>
+
+            <div>
+              <strong>
+                {user?.name || "User"}
+              </strong>
+
+              <span>
+                {user?.role || "Student"}
+              </span>
+            </div>
+
+          </div>
+
+
+          {/* ACTIONS */}
+
+          <div className="form-actions">
+
+            <button
+              className="cancel-btn"
+              onClick={() => navigate("/dashboard")}
+            >
+              Cancel
+            </button>
+
+            <button
+              className="post-submit-btn"
+              onClick={handlePost}
+            >
+              🚀 Publish Post
+            </button>
+
+          </div>
+
         </div>
+
       </div>
+
     </Layout>
   );
 }

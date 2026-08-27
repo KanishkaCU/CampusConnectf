@@ -11,14 +11,17 @@ function ViewAnswers({ search, setSearch }) {
 
   const user = JSON.parse(localStorage.getItem("user") || "null");
 
-  useEffect(() => {
-    fetch("http://localhost:5000/api/questions")
-      .then((res) => res.json())
-      .then((data) => {
-        const found = data.find((q) => q._id === id);
-        setQuestion(found);
-      });
-  }, [id]);
+useEffect(() => {
+  // Increase view count
+  fetch(`http://localhost:5000/api/questions/view/${id}`, {
+    method: "PUT",
+  })
+    .then((res) => res.json())
+    .then((updatedQuestion) => {
+      setQuestion(updatedQuestion);
+    })
+    .catch((err) => console.log(err));
+}, [id]);
 
   // ❤️ LIKE HANDLER
   const handleLike = async () => {
@@ -90,6 +93,30 @@ function ViewAnswers({ search, setSearch }) {
 
         <h2 style={{ marginTop: "12px" }}>{question.title}</h2>
         <p style={{ color: "#555" }}>{question.description}</p>
+        {question.file && (
+  <div
+    style={{
+      marginTop: "16px",
+      padding: "14px",
+      background: "#f8fafc",
+      borderRadius: "10px",
+      border: "1px solid #e5e7eb",
+    }}
+  >
+    <p style={{ margin: "0 0 10px", fontWeight: "600" }}>
+      📎 Attached File
+    </p>
+
+    <a
+      href={`http://localhost:5000/uploads/${question.file}`}
+      target="_blank"
+      rel="noreferrer"
+      className="view-btn"
+    >
+      📥 View / Download File
+    </a>
+  </div>
+)}
 
         {/* ❤️ LIKE BUTTON */}
         <div style={{ display: "flex", alignItems: "center", gap: "10px", margin: "16px 0" }}>

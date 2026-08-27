@@ -399,3 +399,45 @@ input[type="file"] {
 .search-btn:hover {
   background-color:#4CAF6D;
 }
+/* =========================================
+   NEW SIDEBAR
+========================================= */
+
+.sidebar-post-btn {
+  width: 100%;
+  margin-top: 18px;
+  padding: 11px;
+  border: none;
+  border-radius: 9px;
+  background: #4caf68;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sidebar-post-btn:hover {
+  background: #42975a;
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid #e5ebe7;
+}
+
+.sidebar-bottom button {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 11px 14px;
+  text-align: left;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #68746d;
+  font-size: 14px;
+}
+
+.sidebar-bottom button:hover {
+  background: #f1f6f3;
+  color: #333;
+}
